@@ -3,5 +3,5 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
     plugins: [react()],
-    base: '/Front4/'
+    base: '/frontend-and-backend-react-4/'
 })
