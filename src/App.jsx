@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Box } from '@mui/material';
@@ -85,6 +85,7 @@ function AppContent() {
                 <Navigation onTabChange={handleTabChange} />
                 <Box component="main" sx={{ flexGrow: 1 }}>
                     <Routes>
+                        {/* Главная страница */}
                         <Route path="/" element={<Home />} />
                         <Route path="/technologies" element={<TechnologyList />} />
                         <Route path="/technology/:id" element={<TechnologyDetail />} />
@@ -101,6 +102,8 @@ function AppContent() {
                             </ProtectedRoute>
                         } />
                         <Route path="/login" element={<Login />} />
+                        {/* Перенаправление на главную, если маршрут не найден */}
+                        <Route path="*" element={<Navigate to="/" />} />
                     </Routes>
                 </Box>
                 <Box
