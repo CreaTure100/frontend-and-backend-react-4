@@ -27,6 +27,7 @@ const navItems = [
     { index: 1, label: 'Технологии', icon: <ListIcon /> },
     { index: 2, label: 'Статистика', icon: <DashboardIcon /> },
     { index: 3, label: 'Добавить', icon: <AddIcon /> },
+    { index: 4, label: 'Настройки', icon: <ListIcon /> },
 ];
 
 const Navigation = ({ activeTab, onTabChange }) => {

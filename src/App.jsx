@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,43 +12,34 @@ import TechnologyList from './pages/TechnologyList';
 import TechnologyDetail from './pages/TechnologyDetail';
 import AddTechnology from './pages/AddTechnology';
 import Dashboard from './pages/Dashboard';
+import Settings from './pages/Settings';
 
-const theme = createTheme({
-    palette: {
-        primary: {
-            main: '#1976d2',
-        },
-        secondary: {
-            main: '#9c27b0',
-        },
-        background: {
-            default: '#f5f5f5',
-        },
-    },
-    typography: {
-        fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-    },
-    components: {
-        MuiCard: {
-            styleOverrides: {
-                root: {
-                    borderRadius: 8,
-                },
-            },
-        },
-        MuiPaper: {
-            styleOverrides: {
-                root: {
-                    borderRadius: 8,
-                },
-            },
-        },
-    },
-});
-
-// Внутренний компонент для работы с роутингом
 function AppContent() {
-    const [activeTab, setActiveTab] = useState(0);
+    const [activeTab, setActiveTab] = useState(0); // Управление вкладками
+    const [themeMode, setThemeMode] = useState(localStorage.getItem('theme') || 'light'); // Управление темой
+
+    const theme = createTheme({
+        palette: {
+            mode: themeMode, // Используем 'light' или 'dark' режим
+            primary: {
+                main: '#1976d2',
+            },
+            secondary: {
+                main: '#9c27b0',
+            },
+            background: {
+                default: themeMode === 'dark' ? '#121212' : '#f5f5f5', // Цвет фона в зависимости от темы
+            },
+        },
+        typography: {
+            fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+        },
+    });
+
+    useEffect(() => {
+        // Меняем класс на <body> для изменения переменных CSS
+        document.body.className = themeMode === 'dark' ? 'dark-theme' : 'light-theme';
+    }, [themeMode]);
 
     const handleTabChange = (newValue) => {
         setActiveTab(newValue);
@@ -64,58 +55,58 @@ function AppContent() {
                 return <Dashboard onNavigate={handleTabChange} />;
             case 3:
                 return <AddTechnology onNavigate={handleTabChange} />;
+            case 4:
+                return <Settings themeMode={themeMode} setThemeMode={setThemeMode} />;
             default:
                 return <Home onNavigate={handleTabChange} />;
         }
     };
 
     return (
-        <Box
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                minHeight: '100vh',
-            }}
-        >
-            <Navigation activeTab={activeTab} onTabChange={handleTabChange} />
-            <Box component="main" sx={{ flexGrow: 1 }}>
-                <Routes>
-                    {/* Детальная страница использует роутинг */}
-                    <Route
-                        path="/technology/:id"
-                        element={<TechnologyDetail />}
-                    />
-                    {/* Остальные страницы рендерятся без роутинга */}
-                    <Route path="*" element={renderMainContent()} />
-                </Routes>
-            </Box>
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
             <Box
-                component="footer"
                 sx={{
-                    py: 2,
-                    px: 2,
-                    mt: 'auto',
-                    backgroundColor: 'grey.100',
-                    textAlign: 'center',
-                    color: 'text.secondary',
-                    fontSize: '0.875rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    minHeight: '100vh',
                 }}
             >
-                Tech Tracker © {new Date().getFullYear()} - Персональный трекер
-                освоения технологий
+                <Navigation activeTab={activeTab} onTabChange={handleTabChange} />
+                <Box component="main" sx={{ flexGrow: 1 }}>
+                    <Routes>
+                        <Route
+                            path="/technology/:id"
+                            element={<TechnologyDetail />}
+                        />
+                        <Route path="*" element={renderMainContent()} />
+                    </Routes>
+                </Box>
+                <Box
+                    component="footer"
+                    sx={{
+                        py: 2,
+                        px: 2,
+                        mt: 'auto',
+                        backgroundColor: theme.palette.background.default,
+                        textAlign: 'center',
+                        color: theme.palette.text.primary,
+                        fontSize: '0.875rem',
+                    }}
+                >
+                    Tech Tracker © {new Date().getFullYear()} - Персональный трекер
+                    освоения технологий
+                </Box>
             </Box>
-        </Box>
+        </ThemeProvider>
     );
 }
 
 function App() {
     return (
-        <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <Router>
-                <AppContent />
-            </Router>
-        </ThemeProvider>
+        <Router>
+            <AppContent />
+        </Router>
     );
 }
 

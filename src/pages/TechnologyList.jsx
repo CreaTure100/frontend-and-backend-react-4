@@ -106,10 +106,10 @@ const TechnologyList = ({ onNavigate }) => {
 
     const handleRandomTechnology = () => {
         const notCompleted = technologies.filter(
-            (t) => t.status !== STATUS.COMPLETED
+            (t) => t.status === STATUS.NOT_STARTED
         );
         if (notCompleted.length === 0) {
-            alert('Все пункты уже выполнены!');
+            alert('Все доступные технологии либо в процессе, либо завершены. Новых для изучения нет!');
             return;
         }
         const randomIndex = Math.floor(Math.random() * notCompleted.length);

@@ -74,16 +74,8 @@ const AddTechnology = ({ onSuccess }) => {
                     Дорожная карта должна быть в формате JSON со следующей
                     структурой:
                 </Typography>
-                <Box
-                    component="pre"
-                    sx={{
-                        backgroundColor: 'grey.100',
-                        p: 2,
-                        borderRadius: 1,
-                        overflow: 'auto',
-                        fontSize: '0.875rem',
-                    }}
-                >
+                <div className="json-container">
+                    <pre>
                     {`{
   "title": "Название карты",
   "description": "Описание карты (опционально)",
@@ -101,7 +93,8 @@ const AddTechnology = ({ onSuccess }) => {
     }
   ]
 }`}
-                </Box>
+                    </pre>
+                </div>
             </Paper>
 
             <Paper sx={{ p: 3, mt: 3 }}>
@@ -112,17 +105,8 @@ const AddTechnology = ({ onSuccess }) => {
                     Скопируйте этот пример, сохраните как .json файл и
                     загрузите:
                 </Typography>
-                <Box
-                    component="pre"
-                    sx={{
-                        backgroundColor: 'grey.100',
-                        p: 2,
-                        borderRadius: 1,
-                        overflow: 'auto',
-                        fontSize: '0.75rem',
-                        maxHeight: 400,
-                    }}
-                >
+                <div className="json-container">
+                    <pre>
                     {`{
   "title": "React Roadmap",
   "description": "Дорожная карта изучения React",
@@ -209,7 +193,8 @@ const AddTechnology = ({ onSuccess }) => {
     }
   ]
 }`}
-                </Box>
+                    </pre>
+                </div>
                 <Button
                     variant="outlined"
                     sx={{ mt: 2 }}
