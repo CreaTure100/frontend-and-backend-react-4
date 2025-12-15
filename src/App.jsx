@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Box } from '@mui/material';
 import './App.css';
 
 import Navigation from './components/Navigation';
+import ProtectedRoute from './components/ProtectedRoute';
 
 import Home from './pages/Home';
 import TechnologyList from './pages/TechnologyList';
@@ -13,14 +14,16 @@ import TechnologyDetail from './pages/TechnologyDetail';
 import AddTechnology from './pages/AddTechnology';
 import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
+import Login from './pages/Login'; // Страница входа
 
 function AppContent() {
-    const [activeTab, setActiveTab] = useState(0); // Управление вкладками
-    const [themeMode, setThemeMode] = useState(localStorage.getItem('theme') || 'light'); // Управление темой
+    const navigate = useNavigate();
+    const [themeMode, setThemeMode] = useState(localStorage.getItem('theme') || 'light');
 
+    // Создаем тему с текущим режимом
     const theme = createTheme({
         palette: {
-            mode: themeMode, // Используем 'light' или 'dark' режим
+            mode: themeMode,
             primary: {
                 main: '#1976d2',
             },
@@ -28,7 +31,7 @@ function AppContent() {
                 main: '#9c27b0',
             },
             background: {
-                default: themeMode === 'dark' ? '#121212' : '#f5f5f5', // Цвет фона в зависимости от темы
+                default: themeMode === 'dark' ? '#121212' : '#f5f5f5',
             },
         },
         typography: {
@@ -41,24 +44,27 @@ function AppContent() {
         document.body.className = themeMode === 'dark' ? 'dark-theme' : 'light-theme';
     }, [themeMode]);
 
-    const handleTabChange = (newValue) => {
-        setActiveTab(newValue);
-    };
-
-    const renderMainContent = () => {
-        switch (activeTab) {
+    const handleTabChange = (newTab) => {
+        // Изменение маршрута при смене вкладки
+        switch (newTab) {
             case 0:
-                return <Home onNavigate={handleTabChange} />;
+                navigate('/'); // Главная страница
+                break;
             case 1:
-                return <TechnologyList onNavigate={handleTabChange} />;
+                navigate('/technologies'); // Список технологий
+                break;
             case 2:
-                return <Dashboard onNavigate={handleTabChange} />;
+                navigate('/dashboard'); // Статистика
+                break;
             case 3:
-                return <AddTechnology onNavigate={handleTabChange} />;
+                navigate('/add'); // Добавить технологию
+                break;
             case 4:
-                return <Settings themeMode={themeMode} setThemeMode={setThemeMode} />;
+                navigate('/settings'); // Настройки
+                break;
             default:
-                return <Home onNavigate={handleTabChange} />;
+                navigate('/');
+                break;
         }
     };
 
@@ -72,14 +78,20 @@ function AppContent() {
                     minHeight: '100vh',
                 }}
             >
-                <Navigation activeTab={activeTab} onTabChange={handleTabChange} />
+                <Navigation onTabChange={handleTabChange} />
                 <Box component="main" sx={{ flexGrow: 1 }}>
                     <Routes>
-                        <Route
-                            path="/technology/:id"
-                            element={<TechnologyDetail />}
-                        />
-                        <Route path="*" element={renderMainContent()} />
+                        <Route path="/" element={<Home />} />
+                        <Route path="/technologies" element={<TechnologyList />} />
+                        <Route path="/technology/:id" element={<TechnologyDetail />} />
+                        <Route path="/add" element={<AddTechnology />} />
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/settings" element={
+                            <ProtectedRoute>
+                                <Settings themeMode={themeMode} setThemeMode={setThemeMode} />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/login" element={<Login />} />
                     </Routes>
                 </Box>
                 <Box

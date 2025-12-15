@@ -28,11 +28,22 @@ const NEXT_STATUS = {
     [STATUS.COMPLETED]: STATUS.NOT_STARTED,
 };
 
+// Функция проверки авторизации
+const isAuthenticated = () => {
+    const user = localStorage.getItem('user');
+    return user && JSON.parse(user).isAuthenticated;
+};
+
 const SimpleTechCard = ({ technology, onStatusChange, onCardClick }) => {
     const { id, title, description, status, deadline, notes, resources } =
         technology;
 
     const handleClick = () => {
+        if (!isAuthenticated()) {
+            alert('Для просмотра детальной информации необходимо авторизоваться.');
+            return; // Блокируем открытие детального окна
+        }
+
         if (onCardClick) {
             onCardClick(id);
         }
@@ -40,9 +51,15 @@ const SimpleTechCard = ({ technology, onStatusChange, onCardClick }) => {
 
     const handleStatusClick = (e) => {
         e.stopPropagation();
+        if (!isAuthenticated()) {
+            alert('Для изменения статуса необходимо авторизоваться.');
+            return;
+        }
+        
         if (onStatusChange) {
             onStatusChange(id, NEXT_STATUS[status]);
         }
+        
     };
 
     const isOverdue =

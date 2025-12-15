@@ -21,27 +21,23 @@ import HomeIcon from '@mui/icons-material/Home';
 import ListIcon from '@mui/icons-material/List';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AddIcon from '@mui/icons-material/Add';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 const navItems = [
     { index: 0, label: 'Главная', icon: <HomeIcon /> },
     { index: 1, label: 'Технологии', icon: <ListIcon /> },
     { index: 2, label: 'Статистика', icon: <DashboardIcon /> },
     { index: 3, label: 'Добавить', icon: <AddIcon /> },
-    { index: 4, label: 'Настройки', icon: <ListIcon /> },
+    { index: 4, label: 'Настройки', icon: <SettingsIcon /> },
 ];
 
-const Navigation = ({ activeTab, onTabChange }) => {
+const Navigation = ({ onTabChange }) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     const [drawerOpen, setDrawerOpen] = useState(false);
 
     const toggleDrawer = (open) => () => {
         setDrawerOpen(open);
-    };
-
-    const handleNavClick = (index) => {
-        onTabChange(index);
-        setDrawerOpen(false);
     };
 
     const drawer = (
@@ -56,19 +52,9 @@ const Navigation = ({ activeTab, onTabChange }) => {
                 {navItems.map((item) => (
                     <ListItem key={item.index} disablePadding>
                         <ListItemButton
-                            onClick={() => handleNavClick(item.index)}
-                            selected={activeTab === item.index}
-                            sx={{
-                                '&.Mui-selected': {
-                                    backgroundColor: 'primary.light',
-                                    color: 'primary.contrastText',
-                                    '& .MuiListItemIcon-root': {
-                                        color: 'primary.contrastText',
-                                    },
-                                    '&:hover': {
-                                        backgroundColor: 'primary.light',
-                                    },
-                                },
+                            onClick={() => {
+                                onTabChange(item.index);
+                                setDrawerOpen(false);
                             }}
                         >
                             <ListItemIcon>{item.icon}</ListItemIcon>
@@ -122,21 +108,13 @@ const Navigation = ({ activeTab, onTabChange }) => {
                                     {navItems.map((item) => (
                                         <Button
                                             key={item.index}
-                                            onClick={() =>
-                                                handleNavClick(item.index)
-                                            }
+                                            onClick={() => onTabChange(item.index)}
                                             color="inherit"
                                             startIcon={item.icon}
                                             sx={{
-                                                backgroundColor:
-                                                    activeTab === item.index
-                                                        ? 'rgba(255,255,255,0.15)'
-                                                        : 'transparent',
                                                 '&:hover': {
                                                     backgroundColor:
-                                                        activeTab === item.index
-                                                            ? 'rgba(255,255,255,0.15)'
-                                                            : 'rgba(255,255,255,0.08)',
+                                                        'rgba(255,255,255,0.15)',
                                                 },
                                             }}
                                         >

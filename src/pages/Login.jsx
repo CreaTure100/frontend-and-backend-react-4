@@ -1,47 +1,56 @@
 import React, { useState } from 'react';
-import { Container, TextField, Button, Paper, Typography, Box } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { Box, TextField, Button, Typography, Paper } from '@mui/material';
 
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
-  const handleLogin = () => {
-    if (username === 'admin' && password === 'password') {
-      localStorage.setItem('isAuthenticated', 'true');
-      setError(null);
-      window.location.href = '/';
-    } else {
-      setError('Неверное имя пользователя или пароль');
-    }
-  };
+    const handleLogin = () => {
+        // Простая проверка; настоящий авторизованный запрос замените на API
+        if (username === 'admin' && password === '12345') {
+            localStorage.setItem('user', JSON.stringify({ isAuthenticated: true }));
+            navigate('/settings'); // Перенаправляем на страницу настроек после успешного входа
+        } else {
+            alert('Неверные данные для входа');
+        }
+    };
 
-  return (
-    <Container maxWidth="xs" sx={{ py: 4 }}>
-      <Paper sx={{ p: 3 }}>
-        <Typography variant="h5" align="center" gutterBottom>
-          Авторизация
-        </Typography>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <TextField
-            label="Имя пользователя"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <TextField
-            label="Пароль"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {error && <Typography color="error">{error}</Typography>}
-          <Button variant="contained" onClick={handleLogin}>
-            Войти
-          </Button>
+    return (
+        <Box
+            sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh',
+            }}
+        >
+            <Paper sx={{ p: 4, maxWidth: 400 }}>
+                <Typography variant="h5" gutterBottom>
+                    Вход в систему
+                </Typography>
+                <TextField
+                    label="Имя пользователя"
+                    fullWidth
+                    margin="normal"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                />
+                <TextField
+                    label="Пароль"
+                    type="password"
+                    fullWidth
+                    margin="normal"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+                <Button variant="contained" fullWidth sx={{ mt: 2 }} onClick={handleLogin}>
+                    Войти
+                </Button>
+            </Paper>
         </Box>
-      </Paper>
-    </Container>
-  );
+    );
 };
 
 export default Login;

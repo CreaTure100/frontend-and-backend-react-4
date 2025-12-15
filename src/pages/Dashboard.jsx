@@ -31,6 +31,12 @@ import useTechnologies, {
 } from '../hooks/useTechnologies';
 import ProgressBar from '../components/ProgressBar';
 
+// Функция проверки авторизации
+const isAuthenticated = () => {
+    const user = localStorage.getItem('user');
+    return user && JSON.parse(user).isAuthenticated;
+};
+
 const STATUS_ICONS = {
     [STATUS.NOT_STARTED]: <RadioButtonUncheckedIcon />,
     [STATUS.IN_PROGRESS]: <PlayArrowIcon />,
@@ -44,6 +50,14 @@ const Dashboard = ({ onNavigate }) => {
 
     const handleTabChange = (event, newValue) => {
         setTabValue(newValue);
+    };
+
+    const handleNavigateTechnology = (id) => {
+        if (!isAuthenticated()) {
+            alert('Для просмотра детальной информации необходимо авторизоваться.');
+            return; // Блокируем переход к детальному окну
+        }
+        navigate(`/technology/${id}`);
     };
 
     if (!roadmap) {
@@ -86,7 +100,7 @@ const Dashboard = ({ onNavigate }) => {
             </Box>
 
             <Grid container spacing={3} sx={{ mb: 4 }}>
-                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <Grid item xs={12} sm={6} md={3}>
                     <Card sx={{ height: '100%' }}>
                         <CardContent>
                             <Box
@@ -113,7 +127,7 @@ const Dashboard = ({ onNavigate }) => {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <Grid item xs={12} sm={6} md={3}>
                     <Card
                         sx={{
                             height: '100%',
@@ -150,7 +164,7 @@ const Dashboard = ({ onNavigate }) => {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <Grid item xs={12} sm={6} md={3}>
                     <Card
                         sx={{
                             height: '100%',
@@ -184,7 +198,7 @@ const Dashboard = ({ onNavigate }) => {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <Grid item xs={12} sm={6} md={3}>
                     <Card
                         sx={{
                             height: '100%',
@@ -259,8 +273,8 @@ const Dashboard = ({ onNavigate }) => {
                                         <ListItem
                                             component="div"
                                             onClick={() =>
-                                                navigate(
-                                                    `/technology/${item.id}`
+                                                handleNavigateTechnology(
+                                                    item.id
                                                 )
                                             }
                                             sx={{
@@ -319,8 +333,8 @@ const Dashboard = ({ onNavigate }) => {
                                         <ListItem
                                             component="div"
                                             onClick={() =>
-                                                navigate(
-                                                    `/technology/${item.id}`
+                                                handleNavigateTechnology(
+                                                    item.id
                                                 )
                                             }
                                             sx={{
@@ -374,8 +388,8 @@ const Dashboard = ({ onNavigate }) => {
                                             <ListItem
                                                 component="div"
                                                 onClick={() =>
-                                                    navigate(
-                                                        `/technology/${item.id}`
+                                                    handleNavigateTechnology(
+                                                        item.id
                                                     )
                                                 }
                                                 sx={{

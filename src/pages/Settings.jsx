@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, Box, Paper, FormControlLabel, Switch } from '@mui/material';
+import { Container, Typography, Box, Paper, FormControlLabel, Switch, Button } from '@mui/material';
 
 const Settings = ({ themeMode, setThemeMode }) => {
     const [isDarkMode, setIsDarkMode] = useState(themeMode === 'dark');
 
     useEffect(() => {
-        // Изменение темы и сохранение в localStorage
         localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
         setThemeMode(isDarkMode ? 'dark' : 'light');
     }, [isDarkMode, setThemeMode]);
 
+    const handleLogout = () => {
+        localStorage.removeItem('user'); // Удаляем данные пользователя
+        window.location.href = '/login'; // Перенаправляем на страницу входа
+    };
+
     return (
         <Container maxWidth="lg" sx={{ py: 4 }}>
-            {/* Заголовок страницы */}
             <Box sx={{ mb: 4 }}>
                 <Typography variant="h4" component="h1" fontWeight="bold" gutterBottom>
                     Настройки
@@ -22,7 +25,6 @@ const Settings = ({ themeMode, setThemeMode }) => {
                 </Typography>
             </Box>
 
-            {/* Настройки темы */}
             <Paper sx={{ p: 3, mb: 4 }}>
                 <Typography variant="h6" gutterBottom>
                     Тема оформления
@@ -31,11 +33,21 @@ const Settings = ({ themeMode, setThemeMode }) => {
                     control={
                         <Switch
                             checked={isDarkMode}
-                            onChange={(e) => setIsDarkMode(e.target.checked)}
+                            onChange={() => setIsDarkMode((prev) => !prev)}
                         />
                     }
                     label="Включить тёмную тему"
                 />
+            </Paper>
+
+            {/* Кнопка выхода */}
+            <Paper sx={{ p: 3, mt: 4 }}>
+                <Typography variant="h6" gutterBottom>
+                    Учетная запись
+                </Typography>
+                <Button variant="contained" color="error" onClick={handleLogout}>
+                    Выйти из аккаунта
+                </Button>
             </Paper>
         </Container>
     );

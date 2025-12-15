@@ -118,14 +118,14 @@ const TechnologyDetail = () => {
 
     return (
         <Container maxWidth="md" sx={{ py: 4 }}>
-            <Button
+            {/* <Button
                 component={Link}
                 to="/technologies"
                 startIcon={<ArrowBackIcon />}
                 sx={{ mb: 3 }}
             >
                 Назад к списку
-            </Button>
+            </Button> */}
 
             <Paper sx={{ p: 3, mb: 3 }}>
                 <Box
