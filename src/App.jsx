@@ -14,7 +14,8 @@ import TechnologyDetail from './pages/TechnologyDetail';
 import AddTechnology from './pages/AddTechnology';
 import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
-import Login from './pages/Login'; // Страница входа
+import Login from './pages/Login';
+import BulkEditTechnologies from './pages/BulkEditTechnologies';
 
 function AppContent() {
     const navigate = useNavigate();
@@ -62,6 +63,9 @@ function AppContent() {
             case 4:
                 navigate('/settings'); // Настройки
                 break;
+            case 5:
+                navigate('/bulk-edit'); // Массовое редактирование технологий
+                break;
             default:
                 navigate('/');
                 break;
@@ -89,6 +93,11 @@ function AppContent() {
                         <Route path="/settings" element={
                             <ProtectedRoute>
                                 <Settings themeMode={themeMode} setThemeMode={setThemeMode} />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/bulk-edit" element={
+                            <ProtectedRoute>
+                                <BulkEditTechnologies />
                             </ProtectedRoute>
                         } />
                         <Route path="/login" element={<Login />} />

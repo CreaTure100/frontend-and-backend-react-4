@@ -73,6 +73,20 @@ const useTechnologies = () => {
     }));
   }, [setUserProgress]);
 
+  const updateStatuses = useCallback((ids, status) => {
+    // Обновление статусов для нескольких технологий
+    setUserProgress(prev => {
+      const updatedProgress = { ...prev };
+      ids.forEach(id => {
+        updatedProgress[id] = {
+          ...updatedProgress[id],
+          status
+        };
+      });
+      return updatedProgress;
+    });
+  }, [setUserProgress]);
+
   const updateNotes = useCallback((id, notes) => {
     setUserProgress(prev => ({
       ...prev,
@@ -179,6 +193,7 @@ const useTechnologies = () => {
     stats,
     getTechnologyById,
     updateStatus,
+    updateStatuses,
     updateNotes,
     updateDeadline,
     importRoadmap,

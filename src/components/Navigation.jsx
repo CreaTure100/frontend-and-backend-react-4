@@ -22,6 +22,7 @@ import ListIcon from '@mui/icons-material/List';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AddIcon from '@mui/icons-material/Add';
 import SettingsIcon from '@mui/icons-material/Settings';
+import EditIcon from '@mui/icons-material/Edit'; // Добавлен импорт для иконки редактирования
 
 const navItems = [
     { index: 0, label: 'Главная', icon: <HomeIcon /> },
@@ -29,6 +30,7 @@ const navItems = [
     { index: 2, label: 'Статистика', icon: <DashboardIcon /> },
     { index: 3, label: 'Добавить', icon: <AddIcon /> },
     { index: 4, label: 'Настройки', icon: <SettingsIcon /> },
+    { index: 5, label: 'Массовое редактирование', icon: <EditIcon /> }, // Добавлен пункт
 ];
 
 const Navigation = ({ onTabChange }) => {
