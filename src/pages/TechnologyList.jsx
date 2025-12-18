@@ -243,7 +243,7 @@ const TechnologyList = ({ onNavigate }) => {
                                         {STATUS_LABELS[STATUS.COMPLETED]}
                                     </Box>
                                 </MenuItem>
-                                <MenuItem value="overdue">
+                                {/* <MenuItem value="overdue">
                                     <Box
                                         sx={{
                                             display: 'flex',
@@ -261,7 +261,7 @@ const TechnologyList = ({ onNavigate }) => {
                                         />
                                         Просроченные
                                     </Box>
-                                </MenuItem>
+                                </MenuItem> */}
                             </Select>
                         </FormControl>
                     </Grid>

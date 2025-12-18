@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { flushSync } from 'react-dom';
 import {
@@ -25,6 +25,10 @@ import useTechnologies, {
     STATUS_COLORS,
 } from '../hooks/useTechnologies';
 
+const MIN_DATE = '1900-01-01';
+const MAX_DATE = '2100-12-31';
+const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
 const TechnologyDetail = () => {
     const { id } = useParams();
     const { getTechnologyById, updateStatus, updateNotes, updateDeadline } =
@@ -36,13 +40,18 @@ const TechnologyDetail = () => {
     );
 
     const [localNotes, setLocalNotes] = useState('');
-    const [localDeadline, setLocalDeadline] = useState('');
+    const [localDeadline, setLocalDeadline] = useState('');       // валидное сохранённое значение
+    const [deadlineInput, setDeadlineInput] = useState('');       // то, что показывает инпут при вводе
     const [saved, setSaved] = useState(false);
+    const prevDeadlineRef = useRef('');
 
     useEffect(() => {
         if (technology) {
+            const deadline = technology.deadline || '';
             setLocalNotes(technology.notes || '');
-            setLocalDeadline(technology.deadline || '');
+            setLocalDeadline(deadline);
+            setDeadlineInput(deadline);
+            prevDeadlineRef.current = deadline;
         }
     }, [technology]);
 
@@ -89,7 +98,43 @@ const TechnologyDetail = () => {
 
     const handleDeleteDeadline = () => {
         setLocalDeadline('');
+        setDeadlineInput('');
+        prevDeadlineRef.current = '';
         updateDeadline(id, '');
+    };
+
+    const validateAndCommitDate = (value) => {
+        if (!value) {
+            setLocalDeadline('');
+            prevDeadlineRef.current = '';
+            return true;
+        }
+
+        if (!ISO_DATE_RE.test(value)) return false;
+
+        const year = Number(value.slice(0, 4));
+        if (Number.isNaN(year) || year < 1900 || year > 2100) return false;
+
+        // При желании можно проверить саму дату через Date
+        const dt = new Date(value);
+        if (Number.isNaN(dt.getTime())) return false;
+
+        setLocalDeadline(value);
+        prevDeadlineRef.current = value;
+        return true;
+    };
+
+    const handleDeadlineChange = (e) => {
+        const value = e.target.value;
+        setDeadlineInput(value); // показываем то, что вводит пользователь
+    };
+
+    const handleDeadlineBlur = () => {
+        const ok = validateAndCommitDate(deadlineInput);
+        if (!ok) {
+            // откат к предыдущему валидному значению
+            setDeadlineInput(prevDeadlineRef.current);
+        }
     };
 
     if (!technology) {
@@ -118,15 +163,6 @@ const TechnologyDetail = () => {
 
     return (
         <Container maxWidth="md" sx={{ py: 4 }}>
-            {/* <Button
-                component={Link}
-                to="/technologies"
-                startIcon={<ArrowBackIcon />}
-                sx={{ mb: 3 }}
-            >
-                Назад к списку
-            </Button> */}
-
             <Paper sx={{ p: 3, mb: 3 }}>
                 <Box
                     sx={{
@@ -232,10 +268,15 @@ const TechnologyDetail = () => {
                     <TextField
                         type="date"
                         label="Дедлайн"
-                        value={localDeadline}
-                        onChange={(e) => setLocalDeadline(e.target.value)}
+                        value={deadlineInput}
+                        onChange={handleDeadlineChange}
+                        onBlur={handleDeadlineBlur}
                         InputLabelProps={{ shrink: true }}
                         sx={{ width: 200 }}
+                        inputProps={{
+                            min: MIN_DATE,
+                            max: MAX_DATE,
+                        }}
                     />
                     {localDeadline && (
                         <Tooltip title="Удалить дедлайн">
